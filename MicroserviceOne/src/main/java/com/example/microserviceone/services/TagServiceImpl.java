@@ -23,7 +23,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag findById(Integer tagId) {
-        return tagRepo.findById(tagId).get();
+        return tagRepo.findById(tagId).get(); // production ready ?
     }
 
     @Override

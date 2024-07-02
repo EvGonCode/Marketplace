@@ -25,7 +25,7 @@ import static com.example.microserviceone.domain.Role.SELLER;
 public class SecurityConfig {
     @Bean
     public UserDetailsService getUserDetailsService() {
-        return (UserDetailsService) new UserDetailsServiceImpl();
+        return new UserDetailsServiceImpl();
     }
 
     @Bean
@@ -33,8 +33,8 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/new-user").permitAll()
-                                .requestMatchers("/new-product").permitAll()
-                                .requestMatchers("/**").permitAll())
+                                .requestMatchers("/new-product").permitAll() // hasRole vmesto permitAll?
+                                .requestMatchers("/**").permitAll()) // authenticated vmesto permitAll?
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }

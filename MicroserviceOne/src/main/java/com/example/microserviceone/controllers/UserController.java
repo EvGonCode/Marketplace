@@ -1,10 +1,9 @@
 package com.example.microserviceone.controllers;
 
 import com.example.microserviceone.domain.User;
-import com.example.microserviceone.dtos.ShopDto;
 import com.example.microserviceone.dtos.UserDto;
+import com.example.microserviceone.services.UserService;
 import com.example.microserviceone.services.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +14,12 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
-    @Autowired
-    UserServiceImpl userService;
+
+    private final UserService userService; // interface, not class implementation
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/users")
     public List<UserDto> index(){

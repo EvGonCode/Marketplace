@@ -1,10 +1,9 @@
 package com.example.microserviceone.controllers;
 
 import com.example.microserviceone.domain.Tag;
-import com.example.microserviceone.dtos.ShopDto;
 import com.example.microserviceone.dtos.TagDto;
+import com.example.microserviceone.services.TagService;
 import com.example.microserviceone.services.TagServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,8 +11,12 @@ import java.util.stream.Collectors;
 
 @RestController
 public class TagController {
-    @Autowired
-    TagServiceImpl tagService;
+
+    private final TagService tagService;
+
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
+    }
 
     @GetMapping("/tags")
     public List<TagDto> index(){

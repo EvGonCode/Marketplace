@@ -1,13 +1,8 @@
 package com.example.microserviceone.controllers;
 
-import com.example.microserviceone.config.MyUserDetails;
-import com.example.microserviceone.domain.Product;
-import com.example.microserviceone.domain.User;
 import com.example.microserviceone.dtos.ProductDto;
 import com.example.microserviceone.dtos.ProductTagDto;
-import com.example.microserviceone.dtos.TagDto;
 import com.example.microserviceone.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +11,14 @@ import java.util.stream.Collectors;
 
 @RestController
 public class ProductController {
-    @Autowired
-    ProductService productService;
-    @Autowired
-    ShopService shopService;
-    @Autowired
-    UserService userService;
+
+    private final ProductService productService;
+    private final ShopService shopService;
+
+    public ProductController(ProductService productService, ShopService shopService) {
+        this.productService = productService;
+        this.shopService = shopService;
+    }
 
     @GetMapping("/products")
     public List<ProductDto> index(){
@@ -29,13 +26,13 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/new-product/{shop_id}")
-    public String addProduct(@RequestBody ProductDto productDto, @PathVariable Integer shop_id, Authentication authentication) {
-        if(!shopService.editShopValidation(authentication, shop_id)){
+    @PostMapping("/new-product/{shopId}")
+    public String addProduct(@RequestBody ProductDto productDto, @PathVariable Integer shopId, Authentication authentication) {
+        if(!shopService.editShopValidation(authentication, shopId)){
             return "Access denied";
         }
 
-        productService.addProduct(productDto, shop_id);
+        productService.addProduct(productDto, shopId);
         return "Product is saved";
     }
 
