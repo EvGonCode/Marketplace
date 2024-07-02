@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+    @Autowired // kak v controller
     private UserRepo userRepo;
 
     @Override
     public MyUserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Optional<User> user = userRepo.findByLogin(login);
-        return user.map(u -> new MyUserDetails(u))
+        return user.map(MyUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(login + " not found"));
     }
 }

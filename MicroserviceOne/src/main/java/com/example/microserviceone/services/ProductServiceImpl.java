@@ -24,6 +24,7 @@ public class ProductServiceImpl implements ProductService{
     private final ShopRepo shopRepo;
     private final TagRepo tagRepo;
     private final UserRepo userRepo;
+    // вообще щас логика простая, но не желательно использовать миллион репо других обьектов в сервисе этого обьекта
 
     public List<Product> findAll(){
         return productRepo.findAll();
@@ -31,8 +32,8 @@ public class ProductServiceImpl implements ProductService{
 
     public void addProduct(ProductDto pDto, Integer shopId){
         Product product = new Product(pDto.name(), pDto.description(), pDto.price());
-        product.setShop(shopRepo.findById(shopId).get());
-        Shop shop = shopRepo.findById(shopId).get();
+        product.setShop(shopRepo.findById(shopId).get()); // dva raza shopRepo.findById
+        Shop shop = shopRepo.findById(shopId).get();  // production ready ?
         shop.getProducts().add(product);
         productRepo.save(product);
     }
@@ -40,11 +41,11 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public void addTagToProduct(ProductTagDto ptDto) {
         Product product = productRepo.findById(ptDto.productId()).get();
-        product.getTags().add(tagRepo.findById(ptDto.tagId()).get());
+        product.getTags().add(tagRepo.findById(ptDto.tagId()).get());  // production ready ?
         productRepo.save(product);
     }
 
     public Product findById(Integer productId){
-        return productRepo.findById(productId).get();
+        return productRepo.findById(productId).get();  // production ready ?
     }
 }

@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ShopServiceImpl implements ShopService{
-    @Autowired
+    @Autowired // kak v controller, ne @Autowired na polyach
     private final ShopRepo shopRepo;
     @Autowired
     private final UserRepo userRepo;
 
     @Override
-    public List<Shop> findAll() {
+    public List<Shop> findAll() { // better sdelat's 4erez Page (Pageable)
         return shopRepo.findAll();
     }
 
@@ -44,7 +44,7 @@ public class ShopServiceImpl implements ShopService{
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User requestOwner = userRepo.findById(userDetails.getUserId()).get();
         Shop shop = shopRepo.findById(shopId).get();
-        return shop.getOwner().getId() == requestOwner.getId();
+        return shop.getOwner().getId() == requestOwner.getId(); // better equals because not primitive types
 
     }
 }

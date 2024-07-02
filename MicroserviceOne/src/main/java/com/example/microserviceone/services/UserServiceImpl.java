@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
+    @Autowired // kak v controller
     private  UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -30,6 +30,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public User findById(Integer id){
-        return userRepo.findById(id).get();
+        return userRepo.findById(id).get();  // production ready ?
     }
 }
