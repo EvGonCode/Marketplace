@@ -2,12 +2,18 @@ package com.example.microserviceone.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
+@Data
+@Builder
 @Entity
+@AllArgsConstructor
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
