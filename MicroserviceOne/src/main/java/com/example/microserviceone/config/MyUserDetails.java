@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
-public class MyUserDetails implements org.springframework.security.core.userdetails.UserDetails {
+public class MyUserDetails implements UserDetails {
     private User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -37,21 +38,21 @@ public class MyUserDetails implements org.springframework.security.core.userdeta
 
     @Override
     public boolean isAccountNonExpired() {
-        return org.springframework.security.core.userdetails.UserDetails.super.isAccountNonExpired();
+        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return org.springframework.security.core.userdetails.UserDetails.super.isAccountNonLocked();
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return org.springframework.security.core.userdetails.UserDetails.super.isCredentialsNonExpired();
+        return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return org.springframework.security.core.userdetails.UserDetails.super.isEnabled();
+        return UserDetails.super.isEnabled();
     }
 }

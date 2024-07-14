@@ -1,13 +1,9 @@
 package com.example.microserviceone.controllers;
 
-import com.example.microserviceone.config.MyUserDetails;
-import com.example.microserviceone.domain.Product;
-import com.example.microserviceone.domain.User;
 import com.example.microserviceone.dtos.ProductDto;
 import com.example.microserviceone.dtos.ProductTagDto;
-import com.example.microserviceone.dtos.TagDto;
 import com.example.microserviceone.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +11,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 public class ProductController {
-    @Autowired
-    ProductService productService;
-    @Autowired
-    ShopService shopService;
-    @Autowired
-    UserService userService;
+    private final ProductService productService;
+    private final ShopService shopService;
+    private final UserService userService;
 
     @GetMapping("/products")
     public List<ProductDto> index(){

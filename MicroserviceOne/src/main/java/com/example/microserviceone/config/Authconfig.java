@@ -1,6 +1,8 @@
 package com.example.microserviceone.config;
 
+import com.example.microserviceone.repositories.UserRepo;
 import com.example.microserviceone.services.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,14 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class Authconfig {
     @Bean
-    public UserDetailsService getUserDetailsService() {
-        return (UserDetailsService) new UserDetailsServiceImpl();
+    public UserDetailsService getUserDetailsService(UserRepo userRepo) {
+        return new UserDetailsServiceImpl(userRepo);
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(@Qualifier("MyUserDetailsService") UserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(getUserDetailsService());
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

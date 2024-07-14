@@ -4,23 +4,17 @@ import com.example.microserviceone.config.MyUserDetails;
 import com.example.microserviceone.domain.Shop;
 import com.example.microserviceone.domain.User;
 import com.example.microserviceone.dtos.ShopDto;
-import com.example.microserviceone.dtos.TagDto;
 import com.example.microserviceone.repositories.ShopRepo;
 import com.example.microserviceone.repositories.UserRepo;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @AllArgsConstructor
 public class ShopServiceImpl implements ShopService{
-    @Autowired
     private final ShopRepo shopRepo;
-    @Autowired
     private final UserRepo userRepo;
 
     @Override

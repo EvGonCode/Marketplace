@@ -1,10 +1,9 @@
 package com.example.microserviceone.controllers;
 
 import com.example.microserviceone.domain.User;
-import com.example.microserviceone.dtos.ShopDto;
 import com.example.microserviceone.dtos.UserDto;
 import com.example.microserviceone.services.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    UserServiceImpl userService;
+    private final UserServiceImpl userService;
 
     @GetMapping("/users")
     public List<UserDto> index(){

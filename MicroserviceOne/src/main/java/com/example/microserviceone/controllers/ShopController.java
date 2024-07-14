@@ -1,18 +1,17 @@
 package com.example.microserviceone.controllers;
 
-import com.example.microserviceone.domain.Shop;
 import com.example.microserviceone.dtos.ShopDto;
 import com.example.microserviceone.services.ShopService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 public class ShopController {
-    @Autowired
-    ShopService shopService;
+    private final ShopService shopService;
 
     @GetMapping("/shops")
     public List<ShopDto> index(){
