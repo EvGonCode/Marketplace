@@ -39,4 +39,11 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(new MyUserDetails(user));
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
+
+    public String logout(String jwt){
+        if(jwtService.updateTokenRevokeData(AuthenticationResponse.builder().token(jwt).build().getToken(), true)){
+            return "Logout successful";
+        }
+        return "Logout failed";
+    }
 }
