@@ -23,6 +23,7 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/authenticate",
             "/register",
+            "/unauthenticate",
             "/products",
             "/shops"
     };
@@ -33,20 +34,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http.csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth ->
-//                        auth.requestMatchers("/new-user").permitAll()
-//                                .requestMatchers("/new-product").permitAll()
-//                                .requestMatchers("/**").permitAll()
-//                                .anyRequest().authenticated()
-//                                .and()
-//                                .sessionManagement().sessionCreationPolicy()
-//                                .and().authenticationProvider(authenticationProvider)
-//                                .addFilter()
-//                )
-//                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-//                .build();
-//
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
