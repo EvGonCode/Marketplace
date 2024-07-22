@@ -13,9 +13,8 @@ public class Shop implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    @ManyToMany(mappedBy = "shops")
+    private Set<User> managers = new HashSet<>();
     @JsonIgnore
     @OneToMany(mappedBy = "shop")
     private Set<Product> products = new HashSet<>();
@@ -44,15 +43,11 @@ public class Shop implements Serializable {
         this.name = name;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
     public Set<Product> getProducts() {
         return products;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public Set<User> getManagers() {
+        return managers;
     }
 }

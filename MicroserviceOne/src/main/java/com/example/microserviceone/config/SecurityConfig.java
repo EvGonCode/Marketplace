@@ -11,6 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.microserviceone.domain.Role.SELLER;
+import static com.example.microserviceone.domain.Role.MANAGER;
+import static com.example.microserviceone.domain.Role.ADMIN;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
@@ -22,10 +25,10 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             "/authenticate",
-            "/register",
-            "/unauthenticate",
+            "/registerUser",
             "/products",
-            "/shops"
+            "/shops",
+            "/tags"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -39,17 +42,24 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                .requestMatchers(
+                                        "/users",
+                                        "/registerSeller",
+                                        "/registerAdmin",
+                                        "/new-shop/{owner_id}",
+                                        "/new-tag").hasAnyRole(ADMIN.name())
+                                .requestMatchers(
+                                        "/registerManager",
+                                        "/new-shop").hasAnyRole(ADMIN.name(), SELLER.name())
+                                .requestMatchers(
+                                        "/new-product/{shopName}",
+                                        "/product/new-tag").hasAnyRole(ADMIN.name(), SELLER.name(), MANAGER.name())
                                 .anyRequest()
                                 .authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//                .logout(logout ->
-//                        logout.logoutUrl("/logout")
-//                                .addLogoutHandler(logoutHandler)
-//                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-//                )
         ;
 
         return http.build();

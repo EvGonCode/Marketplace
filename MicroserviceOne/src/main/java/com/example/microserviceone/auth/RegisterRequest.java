@@ -1,5 +1,6 @@
 package com.example.microserviceone.auth;
 
+import com.example.microserviceone.domain.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;

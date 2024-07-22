@@ -34,6 +34,12 @@ public enum Role {
                     SELLER_DELETE,
                     SELLER_CREATE
             )
+    ),
+    MANAGER(
+            Set.of(
+                    SELLER_READ,
+                    SELLER_UPDATE
+            )
     )
 
     ;

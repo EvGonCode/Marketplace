@@ -23,10 +23,4 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/new-user")
-    public String addUser(@RequestBody User user) {
-        userService.addUser(user);
-        return "User is saved";
-    }
-
 }

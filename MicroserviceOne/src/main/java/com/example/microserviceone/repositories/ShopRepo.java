@@ -10,5 +10,4 @@ import java.util.Optional;
 
 public interface ShopRepo extends JpaRepository<Shop, Integer> {
     Optional<Shop> findByName(String name);
-    List<Shop> findByOwner(User owner);
 }

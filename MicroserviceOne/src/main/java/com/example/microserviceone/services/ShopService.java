@@ -12,8 +12,10 @@ public interface ShopService {
 
     List<Shop> findByOwner(User owner);
 
-    void addShop(ShopDto shopDto, Integer ownerId);
+    boolean addShopAdmin(ShopDto shopDto, Integer ownerId);
 
-    boolean editShopValidation(Authentication authentication, Integer shopId);
+    boolean addShop(ShopDto shopDto, Authentication authentication);
+
+    boolean editShopValidation(Authentication authentication, String shopName);
 
 }

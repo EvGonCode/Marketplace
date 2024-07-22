@@ -19,11 +19,6 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll();
     }
 
-    public void addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
-    }
-
     public User findById(Integer id){
         return userRepo.findById(id).get();
     }

@@ -19,11 +19,11 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request, Role role) {
         var user = User.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER.name())
+                .role(role)
                 .build();
         userRepo.save(user);
         var jwtToken = jwtService.generateToken(new MyUserDetails(user));

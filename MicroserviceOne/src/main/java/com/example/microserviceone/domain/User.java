@@ -20,23 +20,30 @@ public class User implements Serializable {
     private Integer id;
     private String login;
     private String password;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owner")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "Shop_User",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "shop_id")
+    )
     private Set<Shop> shops = new HashSet<>();
 
-    public User(String login, String password, String role) {
+    public User(String login, String password, Role role) {
         this.login = login;
         this.password = password;
         this.role = role;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

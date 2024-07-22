@@ -1,13 +1,18 @@
 package com.example.microserviceone.services;
 
+import com.example.microserviceone.config.MyUserDetails;
 import com.example.microserviceone.domain.Product;
 import com.example.microserviceone.domain.Shop;
+import com.example.microserviceone.domain.Tag;
+import com.example.microserviceone.domain.User;
 import com.example.microserviceone.dtos.ProductDto;
 import com.example.microserviceone.dtos.ProductTagDto;
 import com.example.microserviceone.repositories.ProductRepo;
 import com.example.microserviceone.repositories.ShopRepo;
 import com.example.microserviceone.repositories.TagRepo;
+import com.example.microserviceone.repositories.UserRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,15 +23,16 @@ public class ProductServiceImpl implements ProductService{
     private final ProductRepo productRepo;
     private final ShopRepo shopRepo;
     private final TagRepo tagRepo;
+    private final ShopService shopService;
 
     public List<Product> findAll(){
         return productRepo.findAll();
     }
 
-    public void addProduct(ProductDto pDto, Integer shopId){
+    public void addProduct(ProductDto pDto, String shopName){
         Product product = new Product(pDto.name(), pDto.description(), pDto.price());
-        product.setShop(shopRepo.findById(shopId).get());
-        Shop shop = shopRepo.findById(shopId).get();
+        Shop shop = shopRepo.findByName(shopName).get();
+        product.setShop(shop);
         shop.getProducts().add(product);
         productRepo.save(product);
     }
@@ -34,8 +40,15 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public void addTagToProduct(ProductTagDto ptDto) {
         Product product = productRepo.findById(ptDto.productId()).get();
-        product.getTags().add(tagRepo.findById(ptDto.tagId()).get());
+        Tag tag = tagRepo.findById(ptDto.tagId()).get();
+        tag.getProducts().add(product);
+        product.getTags().add(tag);
         productRepo.save(product);
+    }
+
+    public boolean editProductValidation(Authentication authentication, Integer productId){
+        Product product = productRepo.findById(productId).get();
+        return shopService.editShopValidation(authentication, product.getShop().getName());
     }
 
     public Product findById(Integer productId){

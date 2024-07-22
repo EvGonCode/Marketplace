@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class ProductController {
     private final ProductService productService;
     private final ShopService shopService;
-    private final UserService userService;
 
     @GetMapping("/products")
     public List<ProductDto> index(){
@@ -23,18 +22,21 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/new-product/{shop_id}")
-    public String addProduct(@RequestBody ProductDto productDto, @PathVariable Integer shop_id, Authentication authentication) {
-        if(!shopService.editShopValidation(authentication, shop_id)){
-            return "Access denied";
+    @PostMapping("/new-product/{shopName}")
+    public String addProduct(@RequestBody ProductDto productDto, @PathVariable String shopName, Authentication authentication) {
+        if(!shopService.editShopValidation(authentication, shopName)){
+            return "Access to this shop is denied";
         }
 
-        productService.addProduct(productDto, shop_id);
+        productService.addProduct(productDto, shopName);
         return "Product is saved";
     }
 
     @PostMapping("/product/new-tag")
-    public String addTagToProduct(@RequestBody ProductTagDto ptd) {
+    public String addTagToProduct(@RequestBody ProductTagDto ptd, Authentication authentication) {
+        if(!productService.editProductValidation(authentication, ptd.productId())){
+            return "Access to this shop is denied";
+        }
         productService.addTagToProduct(ptd);
         return "Tag is added to the product";
     }
