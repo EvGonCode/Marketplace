@@ -3,6 +3,8 @@ package com.example.microserviceone.controllers;
 import com.example.microserviceone.dtos.ShopDto;
 import com.example.microserviceone.services.ShopService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,18 +23,18 @@ public class ShopController {
     }
 
     @PostMapping("/new-shop/{owner_id}")
-    public String addShopAdmin(@RequestBody ShopDto shopDto, @PathVariable Integer owner_id) {
+    public ResponseEntity addShopAdmin(@RequestBody ShopDto shopDto, @PathVariable Integer owner_id) {
         if (shopService.addShopAdmin(shopDto, owner_id)) {
-            return "Shop is saved";
+            return ResponseEntity.ok("Shop is saved");
         }
-        else return "Shop creation error";
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Shop creation error");
     }
 
     @PostMapping("/new-shop")
-    public String addShop(@RequestBody ShopDto shopDto, Authentication authentication) {
+    public ResponseEntity addShop(@RequestBody ShopDto shopDto, Authentication authentication) {
         if(shopService.addShop(shopDto, authentication)) {
-            return "Shop is saved";
+            return ResponseEntity.ok("Shop is saved");
         }
-        else return "Shop creation error";
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Shop creation error");
     }
 }

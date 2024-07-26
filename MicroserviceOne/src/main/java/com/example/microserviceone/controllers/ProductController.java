@@ -4,6 +4,8 @@ import com.example.microserviceone.dtos.ProductDto;
 import com.example.microserviceone.dtos.ProductTagDto;
 import com.example.microserviceone.services.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +25,21 @@ public class ProductController {
     }
 
     @PostMapping("/new-product/{shopName}")
-    public String addProduct(@RequestBody ProductDto productDto, @PathVariable String shopName, Authentication authentication) {
+    public ResponseEntity addProduct(@RequestBody ProductDto productDto, @PathVariable String shopName, Authentication authentication) {
         if(!shopService.editShopValidation(authentication, shopName)){
-            return "Access to this shop is denied";
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to this shop is denied");
         }
 
         productService.addProduct(productDto, shopName);
-        return "Product is saved";
+        return ResponseEntity.ok("Product is saved");
     }
 
     @PostMapping("/product/new-tag")
-    public String addTagToProduct(@RequestBody ProductTagDto ptd, Authentication authentication) {
+    public ResponseEntity addTagToProduct(@RequestBody ProductTagDto ptd, Authentication authentication) {
         if(!productService.editProductValidation(authentication, ptd.productId())){
-            return "Access to this shop is denied";
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to this shop is denied");
         }
         productService.addTagToProduct(ptd);
-        return "Tag is added to the product";
+        return ResponseEntity.ok("Tag is added to the product");
     }
 }

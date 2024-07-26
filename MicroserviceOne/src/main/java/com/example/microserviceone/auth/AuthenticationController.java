@@ -3,6 +3,7 @@ package com.example.microserviceone.auth;
 
 import com.example.microserviceone.domain.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +40,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/unauthenticate")
-    public String logout(@RequestBody JwtRequest jwtRequest) {
-        return service.logout(jwtRequest.getJwt());
+    public ResponseEntity logout(@RequestBody JwtRequest jwtRequest) {
+        if(service.logout(jwtRequest.getJwt())) return ResponseEntity.ok("Logout successful");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Logout failed");
     }
 }

@@ -4,6 +4,7 @@ import com.example.microserviceone.domain.Tag;
 import com.example.microserviceone.dtos.TagDto;
 import com.example.microserviceone.services.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public class TagController {
     }
 
     @PostMapping("/new-tag")
-    public String addTag(@RequestBody Tag tag) {
+    public ResponseEntity addTag(@RequestBody Tag tag) {
         tagService.addTag(tag);
-        return "Tag is saved";
+        return ResponseEntity.ok("Tag is saved");
     }
 }

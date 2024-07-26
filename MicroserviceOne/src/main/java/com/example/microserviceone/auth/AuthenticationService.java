@@ -40,10 +40,10 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public String logout(String jwt){
+    public Boolean logout(String jwt){
         if(jwtService.updateTokenRevokeData(AuthenticationResponse.builder().token(jwt).build().getToken(), true)){
-            return "Logout successful";
+            return true;
         }
-        return "Logout failed";
+        return false;
     }
 }
