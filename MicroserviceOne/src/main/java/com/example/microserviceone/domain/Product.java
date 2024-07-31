@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table
 public class Product  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

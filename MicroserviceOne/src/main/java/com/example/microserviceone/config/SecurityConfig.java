@@ -47,7 +47,8 @@ public class SecurityConfig {
                                         "/registerSeller",
                                         "/registerAdmin",
                                         "/new-shop/{owner_id}",
-                                        "/new-tag").hasAnyRole(ADMIN.name())
+                                        "/new-tag",
+                                        "/tags/{id}").hasAnyRole(ADMIN.name())
                                 .requestMatchers(
                                         "/registerManager",
                                         "/new-shop").hasAnyRole(ADMIN.name(), SELLER.name())

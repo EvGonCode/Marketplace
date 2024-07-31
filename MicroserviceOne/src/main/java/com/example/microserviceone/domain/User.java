@@ -14,6 +14,7 @@ import java.util.Set;
 @Builder
 @Entity
 @AllArgsConstructor
+@Table(name="users")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
