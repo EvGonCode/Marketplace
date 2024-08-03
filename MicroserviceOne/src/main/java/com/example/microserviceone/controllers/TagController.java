@@ -21,13 +21,9 @@ public class TagController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/tags/{id}")
-    public Tag getTagById(@PathVariable Integer id){
-        return tagService.findById(id);
-    }
-
     @PostMapping("/new-tag")
-    public ResponseEntity addTag(@RequestBody Tag tag) {
+    public ResponseEntity<String> addTag(@RequestBody Tag tag) {
+        tagService.validateAddingTag(tag.getName());
         tagService.addTag(tag);
         return ResponseEntity.ok("Tag is saved");
     }

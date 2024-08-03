@@ -12,10 +12,10 @@ public interface ShopService {
 
     List<Shop> findByOwner(User owner);
 
-    boolean addShopAdmin(ShopDto shopDto, Integer ownerId);
+    void addShopAdmin(ShopDto shopDto, String ownerName);
 
-    boolean addShop(ShopDto shopDto, Authentication authentication);
+    void addShop(ShopDto shopDto, Authentication authentication);
 
-    boolean editShopValidation(Authentication authentication, String shopName);
+    void editShopValidation(Authentication authentication, String shopName);
 
 }

@@ -21,7 +21,7 @@ public class TestRedisConfig {
 
     @PostConstruct
     public void startRedis() throws IOException {
-        redisServer = new RedisServer(6379);
+        redisServer = RedisServer.builder().setting("maxheap 1000000000").port(6379).build();
         redisServer.start();
     }
 

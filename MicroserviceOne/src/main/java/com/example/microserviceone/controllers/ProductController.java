@@ -1,10 +1,8 @@
 package com.example.microserviceone.controllers;
 
 import com.example.microserviceone.dtos.ProductDto;
-import com.example.microserviceone.dtos.ProductTagDto;
 import com.example.microserviceone.services.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +15,7 @@ import java.util.stream.Collectors;
 public class ProductController {
     private final ProductService productService;
     private final ShopService shopService;
+    private final TagService tagService;
 
     @GetMapping("/products")
     public List<ProductDto> index(){
@@ -26,20 +25,16 @@ public class ProductController {
 
     @PostMapping("/new-product/{shopName}")
     public ResponseEntity addProduct(@RequestBody ProductDto productDto, @PathVariable String shopName, Authentication authentication) {
-        if(!shopService.editShopValidation(authentication, shopName)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to this shop is denied");
-        }
-
+        shopService.editShopValidation(authentication, shopName);
         productService.addProduct(productDto, shopName);
         return ResponseEntity.ok("Product is saved");
     }
 
-    @PostMapping("/product/new-tag")
-    public ResponseEntity addTagToProduct(@RequestBody ProductTagDto ptd, Authentication authentication) {
-        if(!productService.editProductValidation(authentication, ptd.productId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to this shop is denied");
-        }
-        productService.addTagToProduct(ptd);
+    @PostMapping("/product/new-tag/{shopName}/{productName}/{tagName}")
+    public ResponseEntity addTagToProduct(@PathVariable String shopName, @PathVariable String productName, @PathVariable String tagName, Authentication authentication) {
+        productService.editProductValidation(authentication, productName, shopName);
+        tagService.validateUsingTag(tagName);
+        productService.addTagToProduct(productName, tagName);
         return ResponseEntity.ok("Tag is added to the product");
     }
 }

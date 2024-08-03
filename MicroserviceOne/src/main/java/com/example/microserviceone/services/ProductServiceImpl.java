@@ -7,6 +7,7 @@ import com.example.microserviceone.domain.Tag;
 import com.example.microserviceone.domain.User;
 import com.example.microserviceone.dtos.ProductDto;
 import com.example.microserviceone.dtos.ProductTagDto;
+import com.example.microserviceone.exception.NoSuchProductInShopException;
 import com.example.microserviceone.repositories.ProductRepo;
 import com.example.microserviceone.repositories.ShopRepo;
 import com.example.microserviceone.repositories.TagRepo;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -38,20 +40,28 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void addTagToProduct(ProductTagDto ptDto) {
-        Product product = productRepo.findById(ptDto.productId()).get();
-        Tag tag = tagRepo.findById(ptDto.tagId()).get();
+    public void addTagToProduct(String productName, String shopName) {
+        Product product = productRepo.findByName(productName).get();
+        Tag tag = tagRepo.findByName(shopName).get();
         tag.getProducts().add(product);
         product.getTags().add(tag);
         productRepo.save(product);
     }
 
-    public boolean editProductValidation(Authentication authentication, Integer productId){
-        Product product = productRepo.findById(productId).get();
-        return shopService.editShopValidation(authentication, product.getShop().getName());
+    public void editProductValidation(Authentication authentication, String productName, String shopName){
+        shopService.editShopValidation(authentication, shopName);
+        Shop shop = shopRepo.findByName(shopName).get();
+        List<String> shopProucts = shop.getProducts().stream().map(Product::getName).collect(Collectors.toList());
+        if(!shopProucts.contains(productName)) {
+           throw new NoSuchProductInShopException(shopName, productName);
+        }
     }
 
     public Product findById(Integer productId){
         return productRepo.findById(productId).get();
+    }
+
+    public Product findByName(String productName){
+        return productRepo.findByName(productName).get();
     }
 }

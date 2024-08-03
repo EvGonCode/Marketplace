@@ -22,19 +22,15 @@ public class ShopController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/new-shop/{owner_id}")
-    public ResponseEntity addShopAdmin(@RequestBody ShopDto shopDto, @PathVariable Integer owner_id) {
-        if (shopService.addShopAdmin(shopDto, owner_id)) {
-            return ResponseEntity.ok("Shop is saved");
-        }
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Shop creation error");
+    @PostMapping("/new-shop/{ownerName}")
+    public ResponseEntity addShopAdmin(@RequestBody ShopDto shopDto, @PathVariable String ownerName) {
+        shopService.addShopAdmin(shopDto, ownerName);
+        return ResponseEntity.ok("Shop is saved");
     }
 
     @PostMapping("/new-shop")
     public ResponseEntity addShop(@RequestBody ShopDto shopDto, Authentication authentication) {
-        if(shopService.addShop(shopDto, authentication)) {
-            return ResponseEntity.ok("Shop is saved");
-        }
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Shop creation error");
+        shopService.addShop(shopDto, authentication);
+        return ResponseEntity.ok("Shop is saved");
     }
 }

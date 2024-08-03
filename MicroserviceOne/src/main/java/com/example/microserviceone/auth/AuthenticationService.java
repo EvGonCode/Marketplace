@@ -3,6 +3,7 @@ package com.example.microserviceone.auth;
 import com.example.microserviceone.config.JwtService;
 import com.example.microserviceone.config.MyUserDetails;
 import com.example.microserviceone.domain.Role;
+import com.example.microserviceone.exception.DuplicateUserException;
 import com.example.microserviceone.repositories.UserRepo;
 import lombok.RequiredArgsConstructor;
 import com.example.microserviceone.domain.User;
@@ -20,6 +21,9 @@ public class AuthenticationService {
     private final AuthenticationManager authManager;
 
     public AuthenticationResponse register(RegisterRequest request, Role role) {
+        if(userRepo.findByLogin(request.getLogin()).isPresent()){
+            throw new DuplicateUserException(request.getLogin());
+        }
         var user = User.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -32,9 +36,13 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getLogin(), request.getPassword()
-        ));
+        try {
+            authManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getLogin(), request.getPassword()
+            ));
+        }catch (Exception e){
+            e.printStackTrace();
+        };
         var user = userRepo.findByLogin(request.getLogin()).orElseThrow();
         var jwtToken = jwtService.generateToken(new MyUserDetails(user));
         return AuthenticationResponse.builder().token(jwtToken).build();

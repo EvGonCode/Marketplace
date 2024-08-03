@@ -28,7 +28,8 @@ public class SecurityConfig {
             "/registerUser",
             "/products",
             "/shops",
-            "/tags"
+            "/tags",
+            "/registerAdmin"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -45,7 +46,6 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/users",
                                         "/registerSeller",
-                                        "/registerAdmin",
                                         "/new-shop/{owner_id}",
                                         "/new-tag",
                                         "/tags/{id}").hasAnyRole(ADMIN.name())
@@ -54,7 +54,7 @@ public class SecurityConfig {
                                         "/new-shop").hasAnyRole(ADMIN.name(), SELLER.name())
                                 .requestMatchers(
                                         "/new-product/{shopName}",
-                                        "/product/new-tag").hasAnyRole(ADMIN.name(), SELLER.name(), MANAGER.name())
+                                        "/product/new-tag/{shopName}/{productName}/{tagName}").hasAnyRole(ADMIN.name(), SELLER.name(), MANAGER.name())
                                 .anyRequest()
                                 .authenticated()
                 )

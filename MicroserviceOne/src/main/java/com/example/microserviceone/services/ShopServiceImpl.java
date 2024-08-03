@@ -5,6 +5,10 @@ import com.example.microserviceone.domain.Role;
 import com.example.microserviceone.domain.Shop;
 import com.example.microserviceone.domain.User;
 import com.example.microserviceone.dtos.ShopDto;
+import com.example.microserviceone.exception.NoAccessToShopException;
+import com.example.microserviceone.exception.NoShopException;
+import com.example.microserviceone.exception.NoSuchUserException;
+import com.example.microserviceone.exception.ShopAddedToNotSellerException;
 import com.example.microserviceone.repositories.ShopRepo;
 import com.example.microserviceone.repositories.UserRepo;
 import lombok.AllArgsConstructor;
@@ -28,27 +32,27 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public boolean addShopAdmin(ShopDto shopDto, Integer ownerId) {
-        User owner = userRepo.findById(ownerId).get();
-        if(owner.getRole() == Role.SELLER) {
-            Shop shop = new Shop(shopDto.name());
-            shop.getManagers().add(owner);
-            owner.getShops().add(shop);
-            userRepo.save(owner);
-            return true;
+    public void addShopAdmin(ShopDto shopDto, String ownerName) {
+        if(userRepo.findByLogin(ownerName).isEmpty()){
+            throw new NoSuchUserException(ownerName);
         }
-        return false;
+        User owner = userRepo.findByLogin(ownerName).get();
+        if(owner.getRole() != Role.SELLER) {
+            throw new ShopAddedToNotSellerException(ownerName);
+        }
+        Shop shop = new Shop(shopDto.name());
+        shop.getManagers().add(owner);
+        owner.getShops().add(shop);
+        userRepo.save(owner);
     }
 
-    public boolean addShop(ShopDto shopDto, Authentication authentication){
+    public void addShop(ShopDto shopDto, Authentication authentication) {
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User requestOwner = userRepo.findById(userDetails.getUserId()).get();
         Shop shop = new Shop(shopDto.name());
         shop.getManagers().add(requestOwner);
         requestOwner.getShops().add(shop);
         userRepo.save(requestOwner);
-        //shopRepo.save(shop);
-        return true;
     }
 
     public List<Shop> findByOwner(User owner){
@@ -58,12 +62,15 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public boolean editShopValidation(Authentication authentication, String shopName) {
+    public void editShopValidation(Authentication authentication, String shopName) {
+        if(shopRepo.findByName(shopName).isEmpty()){
+            throw new NoShopException(shopName);
+        }
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User requestOwner = userRepo.findById(userDetails.getUserId()).get();
-        if(requestOwner.getRole().equals(Role.ADMIN)) return true;
+        if(requestOwner.getRole().equals(Role.ADMIN)) return;
 
         Set<User> managers = shopRepo.findByName(shopName).get().getManagers();
-        return managers.stream().anyMatch(user -> user.getId().equals(requestOwner.getId()));
+        if (managers.stream().noneMatch(user -> user.getId().equals(requestOwner.getId()))) throw new NoAccessToShopException(shopName);
     }
 }
